@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    stages {
+        stage('Test') {
+            steps {
+                sh 'python3 -c "assert 1 + 1 == 3, \'Math is broken\'"'
+            }
+        }
+    }
+    post {
+        failure {
+            sh '''
+                echo "Pipeline: ${JOB_NAME} | Build: #${BUILD_NUMBER}" > /tmp/header.txt
+                grep -i "error\\|failed\\|exception\\|not found" ${JENKINS_HOME}/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/log | tail -10 >> /tmp/header.txt
+                cat /tmp/header.txt | python3 /var/lib/jenkins/analyzer.py
+            '''
+        }
+    }
+}

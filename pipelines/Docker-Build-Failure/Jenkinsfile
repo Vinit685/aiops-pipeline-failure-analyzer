@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh '''
+                    echo "FROM ubuntu:22.04\nRUN apt-get install -y nonexistentpackage123 -y" > Dockerfile
+                    docker build -t test-fail .
+                '''
+            }
+        }
+    }
+    post {
+        failure {
+            sh '''
+                echo "Pipeline: ${JOB_NAME} | Build: #${BUILD_NUMBER}" > /tmp/header.txt
+                grep -i "error\\|failed\\|exception\\|not found" ${JENKINS_HOME}/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/log | tail -10 >> /tmp/header.txt
+                cat /tmp/header.txt | python3 /var/lib/jenkins/analyzer.py
+            '''
+        }
+    }
+}
