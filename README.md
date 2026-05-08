@@ -20,6 +20,14 @@ Jenkins Pipeline Failure → Post-Build Hook (curl) → analyzer.py (Flask API) 
 - Docker-Build-Failure — Simulates broken Dockerfile
 - Test-Failure — Simulates failing unit tests
 
+## Sample Alerts
+
+![Dependency Failure](dependency-failure-alert.png)
+
+![Docker Build Failure](docker-build-failure-alert.png)
+
+![Test Failure](test-failure-alert.png)
+
 ## Author
 
 Vinit Suryavanshi — DevOps and Cloud Engineer
